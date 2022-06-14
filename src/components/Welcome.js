@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function Welcome() {
+export default function Welcome( {message} ) {
   return (
         <div className="w-100 d-flex vh-100 justify-content-center align-items-center">
-                <h3>Bienvenido a la ludoteca</h3>
+                <h3> { message } </h3>
         </div>
   )
 }
