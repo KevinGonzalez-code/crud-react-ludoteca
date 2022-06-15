@@ -1,29 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
+import SelectCategory from './SelectCategory';
 
 
 
-export default function Search({category, setCategory,nameJuego,setNameJuego}) {
+export default function Search(
+    {
+        category, setCategory,
+        setNameJuego,
+        setCategorySelected,
+        reset, setReset,
+        filter, setFilter
+    }) {
 
     const url = 'http://localhost:8080/category';
-    
-    const [categorySelected, setCategorySelected] = useState();
 
     const handleChange = (event) => {
+        setReset(!reset);
         setCategorySelected(event.target.value);
     };
 
-    const getFetch = async () => {
-        let res = await fetch(url);
-        res = await res.json();
-        setCategory(res);
+    const cleanSearch = () => {
+        setReset(!reset);
+        setNameJuego("")
+        setCategorySelected("")
+    }
+    
+    const filterList = () =>{
+     
+        setFilter(!filter)
+        document.getElementsByName("search-title")[0].value = "";
     }
 
-    useEffect(() => getFetch(), []);
+    useEffect(() => {
+        async function getFetch() {
+            let res = await fetch(url);
+            res = await res.json();
+            console.log(res)
+            setCategory(res);
+        }
+        getFetch();
+    }, []);
 
     return (
         <>
@@ -34,34 +52,17 @@ export default function Search({category, setCategory,nameJuego,setNameJuego}) {
                         id="filled-size-normal"
                         defaultValue=""
                         variant="standard"
-                        onChange={ (e) => setNameJuego(e.target.value) }
+                        onChange={e => setNameJuego(e.target.value)}
+                        name="search-title"
+                
                     />
                 </div>
                 <div className="col">
-                    <InputLabel id="demo-simple-select-standard-label">Categoria</InputLabel>
-                    <Select fullWidth={true}
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        value=""
-                        onChange={handleChange}
-                        label="Age"
-                        variant='standard'
-                    >
-                        {
-                            category.length > 0
-                                ?
-                                category.map((category) => (
-                                    <MenuItem value={category.id} key={category.id}> {category.name} </MenuItem>
-                                ))
-                                :
-                                <MenuItem value="">Loading...</MenuItem>
-                        }
-
-                    </Select>
+                    <SelectCategory categories={category} handleChange={handleChange} />     
                 </div>
                 <div className="col">
-                    <Button variant="contained" className=" ms-2 float-end" >Filtrar</Button>
-                    <Button variant="contained" className=" float-end" >Limpiar</Button>
+                    <Button variant="contained" className=" ms-2 float-end" onClick={ () =>  filterList() }>Filtrar</Button>
+                    <Button variant="contained" className=" float-end" onClick={() => cleanSearch()} >Limpiar</Button>
                 </div>
             </div>
         </>

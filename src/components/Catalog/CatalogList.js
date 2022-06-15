@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
+import React from 'react';
 import Game from './Game';
 
-export default function CatalogList({ game, setGame }) {
+export default function CatalogList({ game }) {
 
 
 
@@ -23,7 +22,6 @@ export default function CatalogList({ game, setGame }) {
               ""
           }
        </div>
-       <Button variant="contained" className="mt-4 float-end" >Nuevo juego</Button>
       </div>
 
 
